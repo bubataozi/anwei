@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.buba.anwei.dao.AwUserMapper" >
+
+    <select id="dl" resultType="com.buba.anwei.pojo.AwUser">
+	        SELECT aw_user.*,aw_role.id as roleId,aw_role.role_name as rolename
+		    FROM aw_user LEFT JOIN aw_user_role ON aw_user.id = aw_user_role.user_id
+			LEFT JOIN aw_role ON aw_user_role.role_id = aw_role.id
+		    WHERE aw_user.phone = #{phone}
+    </select>
+
+    <select id="loading_res" resultType="com.buba.anwei.pojo.AwRes">
+          SELECT aw_res.* FROM aw_role_res
+          LEFT JOIN aw_res on aw_role_res.res_id=aw_res.id
+          WHERE aw_role_res.role_id = #{roleId}
+    </select>
+    <insert id="adduser" useGeneratedKeys="true" keyProperty="id">
+        insert  into  aw_user(user_name,phone,password,create_time,disabled)
+        values(#{userName},#{phone},#{password},now(),0)
+    </insert>
+    <insert id="adduser_role">
+        insert  into  aw_user_role(user_id,role_id)
+        values(#{userId},#{roleId})
+    </insert>
+</mapper>
